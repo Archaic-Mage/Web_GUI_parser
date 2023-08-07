@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <title>AG-AUTO-DEPLOYER</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="first   ">
+        <!-- The sidebar -->
+        <div class="sidebar">
+            <a href="/new_release" onclick="change_active(this)">new_release</a>
+            <a onclick="change_active(this)">show_release</a>
+            <a onclick="change_active(this)">Contact</a>
+            <a onclick="change_active(this)">About</a>
+        </div>
+
+        <!-- Page content -->
+        <div class="content">
+            <form action="/new_release" method="post">
+                <div>
+                    <label class="input-type" for="release">Release Name</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="release" name="release">
+                </div>
+                <div>
+                    <label class="input-type" for="token">Token</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="token" name="token">
+                </div>
+                <div>
+                    <label class="input-type" for="add_config_parameter">Add Key to Section</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="add_config_parameter" name="add_config_parameter">
+                </div>
+                <div>
+                    <label class="input-type" for="delete_config_parameter">Delete Key from Section</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="delete_config_parameter" name="delete_config_parameter">
+                </div>
+                <div class="multiple">
+                    <label class="input-type" for="modify_config_parameter">Modify Key in Section</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" name="modify_config_parameter-0">
+                    <input class="add-btn" name="modify_config_parameter-0" type="button" value="+"
+                        onclick="add_input_field(this)">
+                </div>
+                <div>
+                    <label class="input-type" for="binary">Filter on basis of Binary Name</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="binary" name="binary">
+                </div>
+                <div>
+                    <label class="input-type" for="hostname">Filter on basis of Machine</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="hostname" name="hostname">
+                </div>
+                <div>
+                    <label class="input-type" for="config_parameters">Filter on basis of Config Parameters</label><br>
+                    <label class="placeholder">Eg: release.ag-test3.20230611.1735</label><br>
+                    <input class="text-holder" type=text id="config_parameters" name="config_parameters">
+                </div>
+
+                <input class="button" type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</body>
+<script src="index.js"></script>
+
+</html>

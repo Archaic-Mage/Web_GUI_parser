@@ -1,72 +1,51 @@
-from js import JS
-from html import HEAD
+
+from bottle import get, post, request, run, static_file
 from functools import wraps
-from argparse import ArgumentParser
+from utils import *
+import socket
 import sys
 
-def generate_div(input_type, placeholder, metavar, multiple=False):
+@get('/favicon.ico')
+def get_favicon():
+    return static_file('favicon.ico', root='static')
 
-    if multiple:
-        string = f'''
-            <input class="text-holder" type=text id="{input_type}-0" name="{input_type}-0">
-            <input class="add-btn" name="{input_type}-0" type="button" value="+" onclick="add_input_field(this)">
-            '''
-    else :
-        string = f'''<input class="text-holder" type=text id="{input_type}" name="{input_type}">'''
+@get('/index.js') 
+def get_js():
+    return static_file('index.js', root='static')
 
-    return f"""<div>
-    <label class="input-type" for="{input_type}">{metavar}</label><br>
-    <label class="placeholder">{placeholder}</label><br>
-    {string}
-</div>
-"""
+@get('/index.css')
+def get_css():
+    return static_file('index.css', root='static')
 
-def generate_form(parser):
-    request_type = parser.prog.split()[1]
-    actions = parser._optionals._actions
-    form = f"""<form action="/" method="post">\n"""
-    for i in range(1, len(actions)):
-        metavar = actions[i].metavar
-        placeholder = actions[i].help
-        input_type = actions[i].dest
-        if actions[i].nargs == '*':
-            form += generate_div(input_type, placeholder, metavar, multiple=True)
-        else:
-            form += generate_div(input_type, placeholder, metavar)
-    form += f"""<input class="button" type="submit" value="Submit">\n"""
-    form += f"""</form>"""
-    return form
-
-def generate_html(subparser):
-    HTML = "<html>\n" + HEAD + "<body>\n" + generate_form(subparser) + "</body>\n" + JS + "</html>"
-    return HTML
-
-
-# for parsing the reponse from the form
-# WEB GUI FUNCTIONS
-def parse_gui_args(gui_dict):
-
-    args = []
-    args_dict = {}
-
-    for key in gui_dict.keys():
-        if len(gui_dict[key].strip())==0:
-            continue
-        arg = key.split('-')[0]
-        if arg not in args_dict:
-            args_dict[arg] = []
-        args_dict[arg].append(gui_dict[key])
-
-    for key in args_dict.keys():
-        args.append(f"--{key}")
-        args.extend(args_dict[key])
-
-    return args
+@get('/')
+def home():
+    print("hello")
+    return static_file('index.html', root='static')
+    
+    
+@get('/<filename:path>')
+def get(filename):
+    req_parts = filename.split('/')
+    print(req_parts)
+    return """<p> done </p>"""
+    
+@post('/submit')
+def submit():
+    print('done')
+    
+def start_server():
+    run(host=socket.gethostbyname(socket.gethostname()), port=8080)
 
 def my_fun(*args, **params):
-    print(args)
-    print(params)
+    global html
+    global parser_dict
     parser = args[0]
+    for name, subparser in iter_parsers(parser):
+        print(name)
+        for name2, subsubparser in iter_parsers(subparser):
+            print(name2)
+    start_server()
+    return "true"
 
 def wooey(func=None, **gkwargs):
         
@@ -79,5 +58,5 @@ def wooey(func=None, **gkwargs):
         # return the wrapped, now monkey-patched, user function
         # to be later invoked
         return func(*args, **kwargs)
-    
-    return inner   
+        
+    return inner  

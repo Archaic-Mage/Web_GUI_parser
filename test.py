@@ -17,7 +17,10 @@ def cli(args):
     abort_release = subparser.add_parser('abort_release')
     revert_release = subparser.add_parser('revert_release')
     show_filter = subparser.add_parser('show_filter')
-
+    
+    subsub_parser = show_filter.add_subparsers(dest='filter', required=True)
+    filter_show_filter = subsub_parser.add_parser('filter')
+    
     new_release.add_argument('-r', '--release', help='Eg: release.ag-test3.20230611.1735', metavar='Release Name')
     new_release.add_argument('-t', '--token', help='Eg: dev-name.<src-bin-name>.date.time', metavar='Token')
     new_release.add_argument('-a', '--add_config_parameter', help='Eg: "[SECTION]KEY=VALUE" "KEY=VALUE"', nargs='*', metavar='Add Key to Section')
@@ -39,9 +42,9 @@ def cli(args):
     revert_release.add_argument('-r', '--release',  help='Eg: release.ag-test3.20230611.1735', required=True, metavar='Release Name')
     revert_release.add_argument('-n', '--hostname', help='Eg: ti-*-* for all \'ti\' machines,  ti-nse-* ti-bse-* for all machines of \'ti\' at nse OR bse', nargs='*', metavar='Filter on basis of Machine')
 
-    show_filter.add_argument('-b', '--binary', type=str, help='Eg: app.flavor.date.time', nargs='*', metavar='Filter on basis of Binary Name')
-    show_filter.add_argument('-n', '--hostname', help='Eg: ti-*-* for all \'ti\' machines,  ti-nse-* ti-bse-* for all machines of \'ti\' at nse OR bse', nargs='*', metavar='Filter on basis of Machine')
-    show_filter.add_argument('-c', '--config_parameters', help='Eg: [*]KEY=* KEY=*', nargs='*', metavar='Filter on basis of Config Parameters')
+    filter_show_filter.add_argument('-b', '--binary', type=str, help='Eg: app.flavor.date.time', nargs='*', metavar='Filter on basis of Binary Name')
+    filter_show_filter.add_argument('-n', '--hostname', help='Eg: ti-*-* for all \'ti\' machines,  ti-nse-* ti-bse-* for all machines of \'ti\' at nse OR bse', nargs='*', metavar='Filter on basis of Machine')
+    filter_show_filter.add_argument('-c', '--config_parameters', help='Eg: [*]KEY=* KEY=*', nargs='*', metavar='Filter on basis of Config Parameters')
     
     args = parser.parse_args()
     print(args)
