@@ -23,5 +23,4 @@ function change_active(ele) {
         var child = parent.children[i].classList.remove('active')
     }
     ele.classList.add('active')
-    //print 
 }

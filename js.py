@@ -17,5 +17,12 @@ JS = """
         parent.appendChild(input)
         parent.appendChild(new_btn)
     }
+    function change_active(ele) {
+        let parent = ele.parentNode
+        for(var i = 0; i < parent.children.length; i++) {
+            var child = parent.children[i].classList.remove('active')
+        }
+        ele.classList.add('active')
+    }
 </script>
 """

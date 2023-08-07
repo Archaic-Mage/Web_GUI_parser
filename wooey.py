@@ -19,8 +19,7 @@ def get_css():
 
 @get('/')
 def home():
-    print("hello")
-    return static_file('index.html', root='static')
+    return generate_html(parser, '/')
     
     
 @get('/<filename:path>')
@@ -37,13 +36,10 @@ def start_server():
     run(host=socket.gethostbyname(socket.gethostname()), port=8080)
 
 def my_fun(*args, **params):
-    global html
-    global parser_dict
+    global parser
     parser = args[0]
     for name, subparser in iter_parsers(parser):
         print(name)
-        for name2, subsubparser in iter_parsers(subparser):
-            print(name2)
     start_server()
     return "true"
 

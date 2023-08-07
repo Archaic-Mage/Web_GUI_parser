@@ -8,44 +8,6 @@ from js import JS
 from html import HEAD
 from argparse import (ArgumentParser, _SubParsersAction)
 
-def generate_div(input_type, placeholder, metavar, multiple=False):
-
-    if multiple:
-        string = f'''
-            <input class="text-holder" type=text id="{input_type}-0" name="{input_type}-0">
-            <input class="add-btn" name="{input_type}-0" type="button" value="+" onclick="add_input_field(this)">
-            '''
-    else :
-        string = f'''<input class="text-holder" type=text id="{input_type}" name="{input_type}">'''
-
-    return f"""<div>
-    <label class="input-type" for="{input_type}">{metavar}</label><br>
-    <label class="placeholder">{placeholder}</label><br>
-    {string}
-</div>
-"""
-
-def generate_form(parser):
-    request_type = parser.prog.split()[1]
-    actions = parser._optionals._actions
-    form = f"""<form action="/" method="post">\n"""
-    for i in range(1, len(actions)):
-        metavar = actions[i].metavar
-        placeholder = actions[i].help
-        input_type = actions[i].dest
-        if actions[i].nargs == '*':
-            form += generate_div(input_type, placeholder, metavar, multiple=True)
-        else:
-            form += generate_div(input_type, placeholder, metavar)
-    form += f"""<input class="button" type="submit" value="Submit">\n"""
-    form += f"""</form>"""
-    return form
-
-def generate_html(subparser):
-    HTML = "<html>\n" + HEAD + "<body>\n" + generate_form(subparser) + "</body>\n" + JS + "</html>"
-    return HTML
-
-
 # for parsing the reponse from the form
 # WEB GUI FUNCTIONS
 def parse_gui_args(gui_dict):
@@ -79,6 +41,58 @@ def iter_parsers(parser):
         return get_subparser(parser._actions).choices.items()
     except:
         return iter([('::wooey/default', parser)])
+
+def generate_div(input_type, placeholder, metavar, multiple=False):
+
+    if multiple:
+        string = f'''
+            <input class="text-holder" type=text id="{input_type}-0" name="{input_type}-0">
+            <input class="add-btn" name="{input_type}-0" type="button" value="+" onclick="add_input_field(this)">
+            '''
+    else :
+        string = f'''<input class="text-holder" type=text id="{input_type}" name="{input_type}">'''
+
+    return f"""<div>
+    <label class="input-type" for="{input_type}">{metavar}</label><br>
+    <label class="placeholder">{placeholder}</label><br>
+    {string}
+</div>
+"""
+
+def generate_end_parser(parser):
+    request_type = parser.prog.split()[1]
+    actions = parser._optionals._actions
+    form = f"""<form action="/" method="post">\n"""
+    for i in range(1, len(actions)):
+        metavar = actions[i].metavar
+        placeholder = actions[i].help
+        input_type = actions[i].dest
+        if actions[i].nargs == '*':
+            form += generate_div(input_type, placeholder, metavar, multiple=True)
+        else:
+            form += generate_div(input_type, placeholder, metavar)
+    form += f"""<input class="button" type="submit" value="Submit">\n"""
+    form += f"""</form>"""
+    return form
+
+def generate_sidebar(parser, prev_link):
+    sidebar = "<div class='sidebar'>\n"
+    for name, subparser in iter_parsers(parser):
+        sidebar += f"""<a href="{prev_link}/{name}" onclick="change_active(this)">{name}</a>\n"""
+    sidebar += "</div>\n"
+    return sidebar
+
+#TODO: make this recursive for nested subparsers, make dictionary to store the parser and then access them using links
+def generate_form(parser, link):
+    sidebar = generate_sidebar(parser, '')
+    link = link.split('/')
+    print(link)
+    for name, subparser in iter_parsers(parser):
+        print(name, subparser)
+
+def generate_html(parser, link):
+    HTML = "<html>\n" + HEAD + "<body>\n" + generate_form(parser, link) + "</body>\n" + JS + "</html>"
+    return HTML
     
     
 

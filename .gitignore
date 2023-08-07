@@ -1,4 +1,6 @@
 .vscode
 *.tmp
 
+__pycache__/
+
 argparser_to_json.py
