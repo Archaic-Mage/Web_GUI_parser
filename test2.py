@@ -1,5 +1,5 @@
-from wooey import *
 import argparse
+from wooey import *
 
 @wooey
 def cli(args):

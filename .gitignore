@@ -1,6 +1,9 @@
+# directories
 .vscode
 *.tmp
+env
 
 __pycache__/
 
 argparser_to_json.py
+try.py

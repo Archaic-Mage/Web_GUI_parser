@@ -8,27 +8,6 @@ from js import JS
 from html import HEAD
 from argparse import (ArgumentParser, _SubParsersAction)
 
-# for parsing the reponse from the form
-# WEB GUI FUNCTIONS
-def parse_gui_args(gui_dict):
-
-    args = []
-    args_dict = {}
-
-    for key in gui_dict.keys():
-        if len(gui_dict[key].strip())==0:
-            continue
-        arg = key.split('-')[0]
-        if arg not in args_dict:
-            args_dict[arg] = []
-        args_dict[arg].append(gui_dict[key])
-
-    for key in args_dict.keys():
-        args.append(f"--{key}")
-        args.extend(args_dict[key])
-
-    return args
-
 def is_subparser(action):
     return isinstance(action, _SubParsersAction)
 
@@ -40,10 +19,32 @@ def iter_parsers(parser):
     try:
         return get_subparser(parser._actions).choices.items()
     except:
-        return iter([('::wooey/default', parser)])
+        return iter([('::wooey::default', parser)])
+
+def parse_gui_args(gui_dict):
+    """!
+    Parses the form data received from the HTML form and returns the corresponding command line arguments.
+    @param gui_dict: Dictionary containing the form data.
+    @return: List of command line arguments.
+    """
+    args = list()
+    args_dict = dict()
+    for key in gui_dict.keys():
+        if len(gui_dict[key].strip())==0:
+            continue
+        arg = key.split('-')[0]
+        if arg not in args_dict:
+            args_dict[arg] = []
+        args_dict[arg].append(gui_dict[key])
+    for key in args_dict.keys():
+        args.append(f"--{key}")
+        args.extend(args_dict[key])
+    return args
 
 def generate_div(input_type, placeholder, metavar, multiple=False):
-
+    """!
+    Generates the HTML code for a single input field.
+    """
     if multiple:
         string = f'''
             <input class="text-holder" type=text id="{input_type}-0" name="{input_type}-0">
@@ -59,10 +60,13 @@ def generate_div(input_type, placeholder, metavar, multiple=False):
 </div>
 """
 
-def generate_end_parser(parser):
-    request_type = parser.prog.split()[1]
+def generate_end_parser(parser, prev_link):
+    """!
+    Generates the HTML code for the last parser in the chain.
+    """
     actions = parser._optionals._actions
-    form = f"""<form action="/" method="post">\n"""
+    form = f"""<form action="{prev_link}" method="post">\n"""
+    # form += f"""<input type="hidden" name="link" value="{prev_link}">\n"""
     for i in range(1, len(actions)):
         metavar = actions[i].metavar
         placeholder = actions[i].help
@@ -75,20 +79,45 @@ def generate_end_parser(parser):
     form += f"""</form>"""
     return form
 
-def generate_sidebar(parser, prev_link):
-    sidebar = "<div class='sidebar'>\n"
-    for name, subparser in iter_parsers(parser):
-        sidebar += f"""<a href="{prev_link}/{name}" onclick="change_active(this)">{name}</a>\n"""
-    sidebar += "</div>\n"
-    return sidebar
+def generate_content(parser, part_idx, parts):
+    # generating the previous link 
+    prev_link = ''
+    for i in range(part_idx):
+        prev_link += ('/' + parts[i])
+        
+    content = "" # remains empty unless ::wooey::default is triggered
+    sidebar = "" # remains empty if ::wooey::default is triggered
+    next = None
+        
+    # constructing the sidebars for the current level - marking the active link
+    for name, subparser in iter_parsers(parser):      
+        if name == '::wooey::default':
+            content = generate_end_parser(subparser, prev_link)
+        else:
+            sidebar += "<div class='sidebar'>\n"
+            for name, subparser in iter_parsers(parser):
+                if part_idx < len(parts) and name == parts[part_idx]:
+                    next = subparser
+                    sidebar += f"""<a class='active' href="{prev_link}/{name}" onclick="change_active(this)">{name}</a>\n"""
+                else:
+                    sidebar += f"""<a href="{prev_link}/{name}" onclick="change_active(this)">{name}</a>\n"""
+            sidebar += "</div>\n"
+        break
+    
+    content_div = "<div class='content'>\n"
+    
+    if content:
+        content_div += content
+    elif next:
+        content_div += generate_content(next, part_idx+1, parts)
+        
+    content_div += "</div>\n"
+    return sidebar + content_div
 
-#TODO: make this recursive for nested subparsers, make dictionary to store the parser and then access them using links
 def generate_form(parser, link):
-    sidebar = generate_sidebar(parser, '')
-    link = link.split('/')
-    print(link)
-    for name, subparser in iter_parsers(parser):
-        print(name, subparser)
+    parts = link.split('/')[1:]
+    content = generate_content(parser, 0, parts)
+    return content
 
 def generate_html(parser, link):
     HTML = "<html>\n" + HEAD + "<body>\n" + generate_form(parser, link) + "</body>\n" + JS + "</html>"
