@@ -5,7 +5,7 @@ This contains fucntions for loading the parsing parameters and generating the co
 """
 
 from js import JS
-from html import HEAD
+from _html import HEAD
 from argparse import (ArgumentParser, _SubParsersAction)
 
 def is_subparser(action):

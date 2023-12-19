@@ -82,7 +82,7 @@ def wooey_wrap(*args, **params):
     start_server()
     return parsed_args
 
-def wooey(func=None, **gkwargs):
+def Wooey(func=None, **gkwargs):
     """
     Patching the default argument parsing function to
     custom made wooey wrapper (Uses Monkey Patching)

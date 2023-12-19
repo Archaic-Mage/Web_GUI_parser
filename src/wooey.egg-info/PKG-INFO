@@ -1,0 +1,25 @@
+Metadata-Version: 2.1
+Name: wooey
+Version: 0.15
+Summary: Package to process program arguments through a web-based GUI
+Author-email: Archaic Mage <sohasoham811@gmail.com>
+Maintainer-email: Archaic Mage <sohasoham811@gmail.com>
+Project-URL: Homepage, https://github.com/Archaic-Mage/Wooey
+Project-URL: Issues, https://github.com/Archaic-Mage/Wooey/issues
+Keywords: web-based-gui,argparser,arguments,command-line,gui,web-based
+Classifier: Development Status :: 3 - Alpha
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: bottle
+
+# WEB GUI
+
+The arguments to the python program can be taken as a web page form input (WEB GUI).
+
+The argparser actions are converted to web form elements to take input. These are then recieved by the program as you would recieve via argparser

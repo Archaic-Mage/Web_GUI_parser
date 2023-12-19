@@ -1,7 +1,7 @@
-from wooey import *
 import argparse
+from wooey import *
 
-@wooey
+@Wooey
 def cli(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--foo', help='foo help', metavar='FOO')

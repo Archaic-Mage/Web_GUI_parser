@@ -1,7 +1,7 @@
 import argparse
-from wooey import *
+from wooey_2 import *
 
-@wooey
+@Wooey
 def cli(args):
     """_summary_
     Hello

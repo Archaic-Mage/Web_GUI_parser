@@ -1,7 +1,9 @@
 # directories
 .vscode
 *.tmp
-env
+/env
+/tests/env
+/dist
 
 __pycache__/
 
