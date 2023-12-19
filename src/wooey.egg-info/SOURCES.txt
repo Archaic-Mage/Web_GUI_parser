@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+src/wooey/__init__.py
+src/wooey/_html.py
+src/wooey/_wooey.py
+src/wooey/css.py
+src/wooey/js.py
+src/wooey/utils.py
+src/wooey.egg-info/PKG-INFO
+src/wooey.egg-info/SOURCES.txt
+src/wooey.egg-info/dependency_links.txt
+src/wooey.egg-info/requires.txt
+src/wooey.egg-info/top_level.txt
+tests/test1.py
+tests/test2.py
